@@ -2,15 +2,21 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class Player : MonoBehaviour
 {
     public static int playerHealth = 1;
-    public static bool hasKeys, hasPhone, hasWallet, win;
+    public static bool hasKeys, hasPhone, hasWallet, win, isDead;
    
     public float playerSpeed = 2.0f;
+    public int numItems = 0;
+    public Text total;
+    public AudioSource SFX; 
 
-    Rigidbody rigidbody;
+
+    //Rigidbody rigidbody;
     Animator playerAnimator;
 
     //Movement ref
@@ -19,12 +25,12 @@ public class Player : MonoBehaviour
 
     public readonly int movementXHash = Animator.StringToHash("MovementX");
     public readonly int movementYHash = Animator.StringToHash("MovementY");
-    public readonly int pickUpHash = Animator.StringToHash("PickUp");
 
     private void Awake()
     {
-        rigidbody = GetComponent<Rigidbody>();
+        //rigidbody = GetComponent<Rigidbody>();
         playerAnimator = GetComponent<Animator>();
+        SFX = GetComponent<AudioSource>(); 
     }
     // Start is called before the first frame update
     void Start()
@@ -32,7 +38,8 @@ public class Player : MonoBehaviour
         hasKeys = false;
         hasPhone = false;
         hasWallet = false;
-        win = false; 
+        win = false;
+        isDead = false;
     }
 
     // Update is called once per frame
@@ -45,6 +52,19 @@ public class Player : MonoBehaviour
         Vector3 movementDirection = moveDirection * (playerSpeed * Time.deltaTime);
         transform.position += movementDirection;
 
+        if(isDead)
+        {
+            print("you died");
+            SceneManager.LoadScene("Death"); 
+        }
+
+        if(numItems == 3)
+        {
+            print("done");
+            SceneManager.LoadScene("Win"); 
+        }
+
+        total.text = numItems.ToString(); 
     }
 
     public void OnMovement(InputValue input)
@@ -54,5 +74,32 @@ public class Player : MonoBehaviour
         playerAnimator.SetFloat(movementYHash, inputVector.y);
     }
 
-   
+    private void OnCollisionEnter(Collision collision)
+    {
+
+        if (collision.gameObject.tag == "DeathPlaneSky" || collision.gameObject.tag == "DeathPlane")
+        {
+            isDead = true;
+        }
+        else if(collision.gameObject.tag == "Phone")
+        {
+            SFX.Play(); 
+            numItems++;
+            Destroy(collision.gameObject);
+        }
+        else if (collision.gameObject.tag == "Bag")
+        {
+            SFX.Play();
+            numItems++;
+            Destroy(collision.gameObject);
+        }
+        else if (collision.gameObject.tag == "Keys")
+        {
+            SFX.Play();
+            numItems++;
+            Destroy(collision.gameObject);
+        }
+    }
+
+
 }

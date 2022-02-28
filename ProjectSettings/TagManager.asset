@@ -6,6 +6,11 @@ TagManager:
   tags:
   - Floor
   - Roof
+  - DeathPlaneSky
+  - DeathPlane
+  - Phone
+  - Bag
+  - Keys
   layers:
   - Default
   - TransparentFX

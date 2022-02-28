@@ -7,11 +7,6 @@ using UnityEngine.SceneManagement;
 public class Buttonmanager : MonoBehaviour
 {
     
-    //Pause menu stuff:
-    private void Start()
-    {
-        //pauseMenu.set
-    }
 
     public void OnStartButtonPressed()
     {
@@ -25,15 +20,25 @@ public class Buttonmanager : MonoBehaviour
 
     public void OnInstructionsButtonPressed()
     {
-
+        SceneManager.LoadScene("Instructions"); 
     }
 
     public void OnCreditsButtonPressed()
     {
-
+        SceneManager.LoadScene("Credits"); 
     }
     
     public void OnBackButtonPressed()
+    {
+        SceneManager.LoadScene("MainMenu");
+    }
+
+    public void QuitButtonPressed()
+    {
+        Application.Quit(); 
+    }
+
+    public void OnMainMenuPressed()
     {
         SceneManager.LoadScene("MainMenu");
     }
